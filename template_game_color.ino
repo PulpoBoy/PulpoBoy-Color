@@ -21,13 +21,19 @@
 #define JOYSTICK_VRx A0
 #define JOYSTICK_VRy A1
 
+// Joystick calibration
+#define ARDUINO_ADC_MIN 0
+#define ARDUINO_ADC_MAX 512
+#define AXES_DEVIATION 150
+
 #include <SPI.h>
 #include <Adafruit_GFX.h> 
 #include <Adafruit_ST7735.h>
 #include <AxisJoystick.h>
 
 Adafruit_ST7735 tft = Adafruit_ST7735(TFT_PIN_CS, TFT_PIN_DC, TFT_PIN_RST);
-AxisJoystick joystick(JOYSTICK_SW, JOYSTICK_VRx, JOYSTICK_VRy);
+
+
 
 enum Move {
     PRESS, UP, DOWN, RIGHT, LEFT, NOT
@@ -112,6 +118,10 @@ void intro(){
 }
 
 void setup() {
+
+  AxisJoystick joystick = AxisJoystick(JOYSTICK_SW, JOYSTICK_VRx, JOYSTICK_VRy);
+  joystick.calibrate(ARDUINO_ADC_MIN, ARDUINO_ADC_MAX, AXES_DEVIATION);
+
   
   tft.initR(INITR_BLACKTAB);
   tft.setRotation(1);
